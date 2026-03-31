@@ -1084,7 +1084,7 @@
     <!-- Full-width hero image -->
     <div>
       <div class="proj-hero-img proj-img-slot has-img" id="p5-hero" style="cursor:default;background:#f0eeeb;">
-        <img src="portfolio images/New Sensing Vessel v32.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;transform:scale(1.15);transform-origin:center;"/>
+        <img src="portfolio images/sensing vessel image.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;"/>
         <div class="proj-img-slot-label" style="display:none"></div>
       </div>
     </div>
@@ -1097,13 +1097,6 @@
           <p class="proj-section-label">Engineering Approach</p>
           <p>The vessel was modeled in Fusion 360 with sealing as the primary constraint. Any atmospheric contamination between the sensor cavity and the Martian environment would corrupt readings, making airtight construction and controlled sensor exposure critical design requirements.</p>
 
-          <!-- Wide: exploded view -->
-          <div class="proj-img-wide">
-            <div class="proj-img-slot has-img" id="p5-model" style="height:380px;width:100%;background:#f0eeeb;">
-              <div class="proj-img-slot-label" style="display:none"></div>
-            </div>
-          </div>
-
           <ul>
             <li>Designed sealed enclosure geometry in Fusion 360 to isolate sensor cavity from external contamination</li>
             <li>Engineered sensor mounting features for repeatable positioning and reliable electrical interface</li>
@@ -1112,18 +1105,24 @@
             <li>Optimized enclosure form factor for rover weight and spatial constraints</li>
           </ul>
 
-          <p class="proj-section-label">Integration</p>
-          <p>The Sensing Vessel connects directly to the Life Detection Assembly, providing environmental sensor data alongside the chemical analysis pipeline. The vessel's sealing strategy mirrors the contamination-control principles used across the broader assembly ensuring measurement integrity from sample collection through spectroscopic readout.</p>
-
-          <!-- Side-by-side: closed view + upload slot -->
-          <div class="proj-img-pair">
-            <div class="proj-img-slot has-img" id="p5-seal" style="height:300px;background:#f0eeeb;">
-              <div class="proj-img-slot-label" style="display:none"></div>
+          <!-- Three images: two CAD renders + photo -->
+          <div style="display:flex;gap:1.2rem;margin:1.8rem 0;">
+            <div style="position:relative;flex:1;height:320px;overflow:hidden;border-radius:6px;background:#f6f4f0;display:flex;align-items:center;justify-content:center;">
+              <img src="portfolio images/New Sensing Vessel v32.png" style="max-width:92%;max-height:92%;object-fit:contain;transform:scale(1.15);transform-origin:center;"/>
+              <span style="position:absolute;bottom:0.8rem;left:1rem;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,0.35);padding:0.2rem 0.6rem;border-radius:2px;">CAD View 1</span>
             </div>
-            <div class="proj-img-slot" id="p5-integration" style="height:300px">
-              <div class="proj-img-slot-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Assembly Integration</div>
+            <div style="position:relative;flex:1;height:320px;overflow:hidden;border-radius:6px;background:#f6f4f0;display:flex;align-items:center;justify-content:center;">
+              <img src="portfolio images/New Sensing Vessel v32 -2.png" style="max-width:92%;max-height:92%;object-fit:contain;transform:scale(1.15);transform-origin:center;"/>
+              <span style="position:absolute;bottom:0.8rem;left:1rem;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,0.35);padding:0.2rem 0.6rem;border-radius:2px;">CAD View 2</span>
+            </div>
+            <div style="position:relative;flex:1;height:320px;overflow:hidden;border-radius:6px;background:#f6f4f0;display:flex;align-items:center;justify-content:center;">
+              <img src="portfolio images/sensing vessel image.png" style="max-width:92%;max-height:92%;object-fit:contain;"/>
+              <span style="position:absolute;bottom:0.8rem;left:1rem;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,0.35);padding:0.2rem 0.6rem;border-radius:2px;">Assembly</span>
             </div>
           </div>
+
+          <p class="proj-section-label">Integration</p>
+          <p>The Sensing Vessel connects directly to the Life Detection Assembly, providing environmental sensor data alongside the chemical analysis pipeline. The vessel's sealing strategy mirrors the contamination-control principles used across the broader assembly ensuring measurement integrity from sample collection through spectroscopic readout.</p>
         </div>
         <div class="proj-sidebar">
           <div class="proj-meta-block">
