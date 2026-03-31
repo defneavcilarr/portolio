@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Defne Avcilar — BME Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --white: #ffffff; --off-white: #f6f4f0; --cream: #ede9e2;
+      --ink: #1a1a18; --ink-light: #4e4e4a; --rule: #dedad3;
+      --accent: #b05c3a; --accent-light: #ead5cb;
+      --font-display: 'DM Serif Display', Georgia, serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--white); color: var(--ink); font-family: var(--font-body); font-weight: 300; line-height: 1.7; overflow-x: hidden; }
+
+    /* PAGE SYSTEM */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.4rem 4rem;
+      background: rgba(255,255,255,0.93); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--rule);
+    }
+    .nav-logo { font-family: var(--font-display); font-size: 1.05rem; color: var(--ink); text-decoration: none; cursor: pointer; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-light); text-decoration: none; transition: color 0.2s; cursor: pointer; }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* PROJECT NAV BAR (shows on project pages) */
+    .proj-nav {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 4rem;
+      background: var(--ink); border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .proj-nav-btn {
+      display: flex; align-items: center; gap: 0.7rem;
+      font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(255,255,255,0.5); background: none; border: none; cursor: pointer;
+      transition: color 0.2s; font-family: var(--font-body);
+    }
+    .proj-nav-btn:hover { color: var(--white); }
+    .proj-nav-btn.disabled { opacity: 0.2; pointer-events: none; }
+    .proj-nav-center {
+      display: flex; gap: 0.5rem; align-items: center;
+    }
+    .proj-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.2); border: none; cursor: pointer; transition: background 0.2s;
+    }
+    .proj-dot.active { background: var(--accent); }
+    .proj-nav-back {
+      font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(255,255,255,0.4); background: none; border: none; cursor: pointer;
+      font-family: var(--font-body); transition: color 0.2s;
+    }
+    .proj-nav-back:hover { color: var(--white); }
+
+    /* HERO */
+    .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; padding-top: 72px; }
+    .hero-left { display: flex; flex-direction: column; justify-content: center; padding: 5rem 4rem; border-right: 1px solid var(--rule); }
+    .hero-eyebrow { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.6rem; }
+    .hero-name { font-family: var(--font-display); font-size: clamp(3rem, 5vw, 5.5rem); line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 1.8rem; }
+    .hero-name em { font-style: italic; color: var(--accent); }
+    .hero-desc { font-size: 1rem; color: var(--ink-light); max-width: 40ch; margin-bottom: 2.5rem; line-height: 1.85; }
+    .hero-badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2.8rem; }
+    .badge { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.3rem 0.75rem; background: var(--cream); color: var(--ink-light); border-radius: 2px; }
+    .hero-cta { display: inline-flex; align-items: center; gap: 0.8rem; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--ink); padding-bottom: 0.2rem; transition: color 0.2s, border-color 0.2s; width: fit-content; cursor: pointer; background: none; border-top: none; border-left: none; border-right: none; font-family: var(--font-body); }
+    .hero-cta:hover { color: var(--accent); border-bottom-color: var(--accent); }
+    .hero-cta svg { transition: transform 0.2s; }
+    .hero-cta:hover svg { transform: translateX(4px); }
+    .hero-right { background: var(--off-white); display: flex; flex-direction: column; justify-content: flex-end; padding: 4rem; position: relative; overflow: hidden; }
+    .hero-bg-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-8deg); font-family: var(--font-display); font-size: clamp(6rem, 14vw, 15rem); color: var(--cream); line-height: 1; white-space: nowrap; user-select: none; pointer-events: none; letter-spacing: -0.03em; z-index: 0; opacity: 0.55; }
+    .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; position: relative; z-index: 1; }
+    .stat-item { border-top: 1px solid var(--rule); padding-top: 1.2rem; }
+    .stat-number { font-family: var(--font-display); font-size: 2.6rem; color: var(--ink); line-height: 1; margin-bottom: 0.4rem; }
+    .stat-label { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-light); }
+
+    /* SHARED SECTIONS */
+    section { padding: 6rem 4rem; }
+    .section-header { display: flex; align-items: baseline; gap: 2rem; margin-bottom: 4rem; border-bottom: 1px solid var(--rule); padding-bottom: 1.5rem; }
+    .section-number { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+    .section-title { font-family: var(--font-display); font-size: clamp(1.8rem, 3vw, 2.8rem); color: var(--ink); }
+
+    /* ABOUT */
+    #about { background: var(--off-white); padding-top: 3rem; }
+    .about-grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 5rem; align-items: start; }
+    .about-tag { display: inline-block; background: var(--accent-light); color: var(--accent); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.3rem 0.8rem; border-radius: 2px; margin-bottom: 1.2rem; }
+    .about-aside h3 { font-family: var(--font-display); font-size: 1.55rem; line-height: 1.3; margin-bottom: 1.2rem; }
+    .skills-list { list-style: none; margin-top: 0.5rem; }
+    .skills-list li { display: flex; align-items: center; gap: 0.8rem; padding: 0.55rem 0; border-bottom: 1px solid var(--rule); font-size: 0.82rem; color: var(--ink-light); }
+    .skills-list li::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+    .about-main p { font-size: 1rem; color: var(--ink-light); margin-bottom: 1.4rem; line-height: 1.9; }
+    .about-main p strong { color: var(--ink); font-weight: 500; }
+    .exp-block { margin-top: 2.5rem; }
+    .exp-block > h4 { font-family: var(--font-display); font-size: 1rem; margin-bottom: 1rem; color: var(--ink); }
+    .exp-item { border: 1px solid var(--rule); padding: 1.4rem 1.6rem; margin-bottom: 1rem; border-left: 3px solid var(--accent); background: var(--white); }
+    .exp-item-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.5rem; }
+    .exp-item-title { font-weight: 500; font-size: 0.9rem; color: var(--ink); }
+    .exp-item-date { font-size: 0.68rem; letter-spacing: 0.08em; color: var(--accent); text-transform: uppercase; }
+    .exp-item-org { font-size: 0.8rem; color: var(--ink-light); margin-bottom: 0.6rem; }
+    .exp-item p { font-size: 0.82rem; color: var(--ink-light); line-height: 1.75; }
+    .edu-block { background: var(--white); border: 1px solid var(--rule); padding: 1.4rem 1.6rem; border-left: 3px solid var(--accent); margin-top: 1rem; }
+    .edu-label { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+    .edu-block h4 { font-family: var(--font-display); font-size: 1.05rem; margin-bottom: 0.2rem; }
+    .edu-block p { font-size: 0.82rem; color: var(--ink-light); margin: 0; line-height: 1.6; }
+    .edu-section-label { font-family: var(--font-display); font-size: 1rem; margin-bottom: 0.8rem; margin-top: 2rem; color: var(--ink); }
+
+    /* PROJECTS GRID */
+    #projects { background: var(--white); }
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 2px; }
+    .project-card { background: var(--white); border: 1px solid var(--rule); padding: 2.5rem; cursor: pointer; transition: background 0.25s, transform 0.25s; position: relative; overflow: hidden; }
+    .project-card::before { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease; }
+    .project-card:hover { background: var(--off-white); transform: translateY(-3px); }
+    .project-card:hover::before { transform: scaleX(1); }
+    .project-num { position: absolute; bottom: 1.8rem; right: 2rem; font-family: var(--font-display); font-size: 3.5rem; color: var(--accent-light); line-height: 1; user-select: none; pointer-events: none; z-index: 1; }
+    .project-tag { font-size: 0.63rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.5rem; }
+    .project-tag::before { content: ''; width: 18px; height: 1px; background: var(--accent); }
+    .project-card h3 { font-family: var(--font-display); font-size: 1.35rem; line-height: 1.25; margin-bottom: 1rem; color: var(--ink); max-width: 26ch; }
+    .project-card > p { font-size: 0.85rem; color: var(--ink-light); line-height: 1.75; margin-bottom: 1.6rem; }
+    .project-tech { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 1.6rem; }
+    .tech-chip { font-size: 0.63rem; letter-spacing: 0.07em; text-transform: uppercase; padding: 0.22rem 0.6rem; background: var(--cream); color: var(--ink-light); border-radius: 2px; }
+    .card-cta { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-family: var(--font-body); }
+    .card-cta svg { transition: transform 0.2s; }
+    .project-card:hover .card-cta svg { transform: translateX(4px); }
+
+    /* CONTACT */
+    #contact { background: var(--ink); color: var(--white); }
+    #contact .section-title { color: var(--white); }
+    #contact .section-header { border-color: rgba(255,255,255,0.1); }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+    .contact-left h2 { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.2; margin-bottom: 1.4rem; }
+    .contact-left h2 em { font-style: italic; color: var(--accent); }
+    .contact-left p { color: rgba(255,255,255,0.5); font-size: 0.92rem; line-height: 1.85; }
+    .contact-links { display: flex; flex-direction: column; gap: 1rem; }
+    .contact-item { display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 1.5rem; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; color: var(--white); transition: background 0.2s, border-color 0.2s; }
+    .contact-item:hover { background: rgba(176,92,58,0.14); border-color: var(--accent); }
+    .contact-item-label { font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.38); margin-bottom: 0.2rem; }
+    .contact-item-value { font-size: 0.88rem; }
+    .contact-item svg { opacity: 0.35; transition: opacity 0.2s; }
+    .contact-item:hover svg { opacity: 1; }
+
+    footer { background: var(--ink); border-top: 1px solid rgba(255,255,255,0.07); padding: 1.8rem 4rem; display: flex; align-items: center; justify-content: space-between; }
+    footer p { color: rgba(255,255,255,0.25); font-size: 0.72rem; letter-spacing: 0.06em; }
+
+    /* PROJECT DETAIL PAGE */
+    .proj-page { padding-top: 72px; padding-bottom: 80px; min-height: 100vh; }
+    .proj-hero {
+      display: grid; grid-template-columns: 1fr 1fr; min-height: 52vh;
+    }
+    .proj-hero-left {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 5rem 4rem; border-right: 1px solid var(--rule);
+    }
+    .proj-hero-right {
+      background: var(--off-white);
+      display: flex; align-items: center; justify-content: center;
+      padding: 4rem; position: relative; overflow: hidden;
+    }
+    .proj-hero-icon {
+      font-family: var(--font-display); font-size: clamp(5rem, 12vw, 12rem);
+      color: var(--cream); line-height: 1; user-select: none;
+    }
+    .proj-eyebrow { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.2rem; }
+    .proj-title { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.1; margin-bottom: 1.5rem; }
+    .proj-subtitle { font-size: 0.95rem; color: var(--ink-light); line-height: 1.8; max-width: 42ch; }
+    .proj-body { padding: 5rem 4rem; }
+    .proj-body-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 5rem; align-items: start; }
+    .proj-section-label { font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; margin-top: 2.5rem; }
+    .proj-section-label:first-child { margin-top: 0; }
+    .proj-body-main h3 { font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 0.8rem; color: var(--ink); }
+    .proj-body-main p { font-size: 0.95rem; color: var(--ink-light); line-height: 1.9; margin-bottom: 1.2rem; }
+    .proj-body-main ul { list-style: none; margin-bottom: 1.2rem; }
+    .proj-body-main ul li { display: flex; align-items: flex-start; gap: 0.8rem; padding: 0.5rem 0; border-bottom: 1px solid var(--rule); font-size: 0.88rem; color: var(--ink-light); line-height: 1.6; }
+    .proj-body-main ul li::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 0.55rem; }
+    .proj-sidebar { }
+    .proj-meta-block { background: var(--off-white); padding: 1.6rem; margin-bottom: 1rem; }
+    .proj-meta-block .meta-label { font-size: 0.63rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem; }
+    .proj-meta-block .meta-value { font-size: 0.85rem; color: var(--ink); line-height: 1.6; }
+    .proj-tech-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+
+    /* PROJECT CARD COVER IMAGE */
+    .project-cover {
+      width: 100%; height: 170px; margin-bottom: 1.4rem;
+      background: var(--cream); border: 1px dashed var(--rule);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      position: relative; overflow: hidden; cursor: pointer; transition: border-color 0.2s;
+    }
+    .project-cover:hover { border-color: var(--accent); }
+    .project-cover img { width:100%;height:100%;object-fit:cover;object-position:center;position:absolute;inset:0; }
+    .project-cover-label {
+      font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--ink-light); opacity: 0.45; display: flex; flex-direction: column;
+      align-items: center; gap: 0.4rem; z-index:1; pointer-events:none;
+    }
+    .project-cover.has-img .project-cover-label { display: none; }
+
+    /* PROJECT PAGE IMAGE AREAS */
+    .proj-img-slot {
+      background: var(--off-white); border: 1px dashed var(--rule);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; position: relative;
+      overflow: hidden;
+    }
+    .proj-img-slot img { position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center; }
+    .proj-img-slot-label {
+      font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--ink-light); opacity:0.4; display:flex; flex-direction:column;
+      align-items:center; gap:0.4rem; z-index:1; pointer-events:none;
+    }
+    .proj-img-slot.has-img .proj-img-slot-label { display: none; }
+    /* Full-width hero image below proj-hero */
+    .proj-hero-img { width:100%; height:400px; }
+    /* Side-by-side pair */
+    .proj-img-pair { display:grid; grid-template-columns:1fr 1fr; gap:1px; margin:3rem 0; }
+    .proj-img-pair .proj-img-slot { height:280px; }
+    /* Wide single */
+    .proj-img-wide { margin:3rem 0; }
+    .proj-img-wide .proj-img-slot { height:340px; width:100%; }
+    /* Inline caption */
+    .proj-img-caption { font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-light); margin-top:0.6rem; opacity:0.6; }
+
+    /* FADE */
+    .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* TRANSITION */
+    .page-transition { animation: pageIn 0.35s ease both; }
+    @keyframes pageIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideDown { from { opacity:0; transform:translateY(-14px); } to { opacity:1; transform:translateY(0); } }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .nav-links { gap: 1.4rem; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .hero-left { padding: 5.5rem 1.5rem 4rem; }
+      section { padding: 4rem 1.5rem; }
+      .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      footer { flex-direction: column; gap: 0.8rem; text-align: center; padding: 1.5rem; }
+      .proj-hero { grid-template-columns: 1fr; }
+      .proj-hero-right { display: none; }
+      .proj-hero-left { padding: 3rem 1.5rem; }
+      .proj-body { padding: 3rem 1.5rem; }
+      .proj-body-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .proj-nav { padding: 1rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo" onclick="showPage('home')">Defne Avcilar</span>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home'); scrollToSection('about')">About</a></li>
+    <li><a onclick="showPage('home'); scrollToSection('projects')">Projects</a></li>
+    <li><a onclick="showPage('home'); scrollToSection('recommendations')">Picks</a></li>
+    <li><a onclick="showPage('home'); scrollToSection('contact')">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════════════════════════ HOME PAGE ═══════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-left">
+      <p class="hero-eyebrow">Biomedical Engineering · Boston University · Kilachand Honors College</p>
+      <h1 class="hero-name">Defne<br><em>Avcilar</em></h1>
+      <p class="hero-desc">Engineering medical devices and robotic systems where precision meets human impact — from surgical tools to Mars terrain life detection.</p>
+      <div class="hero-badges">
+        <span class="badge">Medical Devices</span>
+        <span class="badge">Robotics</span>
+        <span class="badge">CAD &amp; FEA</span>
+        <span class="badge">Technology &amp; Innovation</span>
+      </div>
+      <button class="hero-cta" onclick="scrollToSection('projects')">
+        View Projects
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <div class="hero-right">
+      <div class="hero-photo-container" id="hero-photo-container" style="position:absolute;top:4%;left:50%;transform:translateX(-50%);z-index:2;overflow:hidden;width:72%;height:62%;border-radius:6px;box-shadow:0 4px 24px rgba(0,0,0,0.10);">
+        <div class="hero-photo-upload-label" id="hero-photo-label" style="display:none;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          Upload Photo
+        </div>
+        <img src="portfolio images/cover image.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;"/>
+      </div>
+      <div class="hero-bg-text">BME</div>
+      <div class="hero-stats" style="display:flex;flex-direction:column;align-items:flex-start;padding:0.8rem 2rem 1.5rem;gap:0.8rem;">
+        <p style="margin:0;font-size:1.1rem;color:var(--ink-light);line-height:1.85;">Hello! My name is <strong style="color:var(--ink);">Defne Avcilar</strong>, and I'm a freshman at <strong style="color:var(--ink);">Boston University</strong> majoring in <strong style="color:var(--ink);">Biomedical Engineering</strong>, minoring in <strong style="color:var(--ink);">Mechanical Engineering</strong> and concentrating on <strong style="color:var(--ink);">Robotics</strong> and <strong style="color:var(--ink);">Technology &amp; Innovation</strong>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-header fade-in">
+      <span class="section-number">01 — About</span>
+      <h2 class="section-title">Who I Am</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-aside fade-in">
+        <span class="about-tag">College of Engineering · Biomedical Engineering</span>
+        <h3>Devices that live at the edge of biology &amp; engineering.</h3>
+        <ul class="skills-list">
+          <li>Fusion 360, SolidWorks, AutoCAD &amp; OnShape</li>
+          <li>FEA &amp; Stress Analysis</li>
+          <li>MATLAB, Python &amp; JavaScript</li>
+          <li>ITK-SNAP</li>
+          <li>3D Printing &amp; Fabrication</li>
+          <li>Medical Device Prototyping</li>
+          <li>Robotic Systems Design</li>
+        </ul>
+
+        <p class="edu-section-label">Education</p>
+        <div class="edu-block">
+          <div class="edu-label">University</div>
+          <h4>Boston University</h4>
+          <p>B.S. Biomedical Engineering · Kilachand Honors College<br>
+          Minor: Mechanical Engineering<br>
+          Concentrations: Robotics · Technology &amp; Innovation<br>
+          </p>
+        </div>
+        <div class="edu-block">
+          <div class="edu-label">High School</div>
+          <h4>Robert College</h4>
+          <p>High School Diploma · Istanbul, Turkey<br>
+          Relevant Coursework: Biology Research: Human Diseases · Electronics: Advanced<br>
+          Activities: Debate · ARC 6014 FIRST Robotics Team</p>
+        </div>
+      </div>
+
+      <div class="about-main fade-in">
+        <p>My goal in my career is to work in the field of <strong>surgical robotics</strong> where I can design and build systems that have greater precision and give patients better outcomes. I'm drawn to the challenge of translating complex <strong>clinical needs into reliable, functional hardware</strong>, and I think surgical robotics is where that challenge is most exciting and most impactful.</p>
+        <p>On campus, I'm a part of the <strong>BU Mars Rover Team</strong> where I work in the <strong>Life Detection subteam</strong>. I'm also a member of the <strong>BME Society</strong>, where I'm currently competing in their annual <strong>Design-a-Thon Challenge</strong> with my <strong>Soft Robotic Tenaculum</strong> project.</p>
+        <p>Other than design &amp; engineering, I love <strong>reading</strong>, <strong>watching movies</strong> and going to the <strong>opera</strong> (where I included some of my favorite pieces of literature in my picks section!). I'm also a <strong>photographer</strong> where I pursue both digital and film photography. I also love <strong>yoga and pilates</strong> and going on walks along the <strong>Charles River Esplanade</strong>.</p>
+        <div class="exp-block">
+          <h4>Experience</h4>
+          <div class="exp-item">
+            <div class="exp-item-header">
+              <span class="exp-item-title">Life Detection Team Engineer</span>
+              <span class="exp-item-date">Sept 2025 – Present</span>
+            </div>
+            <div class="exp-item-org">BU Mars Rover Club · Boston, MA</div>
+            <p>Co-leading design of a life detection assembly that performs chemical experiments on Mars terrain samples. Designing a robotic arm for cuvette transport and a linear actuation system for the sample-collecting auger.</p>
+          </div>
+          <div class="exp-item">
+            <div class="exp-item-header">
+              <span class="exp-item-title">Biomedical Engineer Intern</span>
+              <span class="exp-item-date">June – Aug 2022</span>
+            </div>
+            <div class="exp-item-org">Acıbadem University · Istanbul, Turkey</div>
+            <p>Designed an automated Sharps Box prototype in Fusion 360 under the Dean of Engineering. Authored a full technical report and presented to Acıbadem Hospitals' acquisition board — prototype placed under formal review.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="section-header fade-in">
+      <span class="section-number">02 — Projects</span>
+      <h2 class="section-title">Selected Work</h2>
+    </div>
+    <div class="projects-grid">
+
+      <div class="project-card fade-in" onclick="showProject(0)">
+        <span class="project-num">01</span>
+        <div class="project-cover has-img" id="proj-cover-0" onclick="event.stopPropagation()" style="cursor:default;">
+          <img src="portfolio images/sharps box .png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;"/>
+          <div class="project-cover-label" style="display:none"></div>
+        </div>
+        <div class="project-tag">Medical Device</div>
+        <h3>Automated Sharps Box</h3>
+        <p>An automated sharps disposal unit designed to eliminate direct contact between healthcare workers and used needles — presented to Acıbadem Hospitals' acquisition board.</p>
+        <div class="project-tech">
+          <span class="tech-chip">Fusion 360</span>
+          <span class="tech-chip">Mechanism Design</span>
+          <span class="tech-chip">Healthcare Safety</span>
+          <span class="tech-chip">Prototyping</span>
+        </div>
+        <span class="card-cta">View Project <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </div>
+
+      <div class="project-card fade-in" onclick="showProject(1)">
+        <span class="project-num">02</span>
+        <div class="project-cover has-img" id="proj-cover-1" onclick="event.stopPropagation()" style="cursor:default;">
+          <img src="portfolio images/biomedical implant v21 2.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;"/>
+          <div class="project-cover-label" style="display:none"></div>
+        </div>
+        <div class="project-tag">Orthopedic Implant</div>
+        <h3>Custom Orthopedic Hip Implant</h3>
+        <p>Patient-geometry hip implant designed in Fusion 360 with FEA-based stress analysis and iterative geometry refinement under simulated physiological loads.</p>
+        <div class="project-tech">
+          <span class="tech-chip">Fusion 360</span>
+          <span class="tech-chip">FEA</span>
+          <span class="tech-chip">Biomechanics</span>
+          <span class="tech-chip">Implant Design</span>
+        </div>
+        <span class="card-cta">View Project <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </div>
+
+      <div class="project-card fade-in" onclick="showProject(2)">
+        <span class="project-num">03</span>
+        <div class="project-cover has-img" id="proj-cover-2" onclick="event.stopPropagation()" style="background:#f8f8f8;">
+          <img src="portfolio images/Mini Arm v50.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;transform:scale(1.5);transform-origin:center;"/>
+          <div class="project-cover-label" style="display:none"></div>
+        </div>
+        <div class="project-tag">Robotics · BU MRC</div>
+        <h3>Mini Robotic Arm — Mars Rover Club</h3>
+        <p>Compact robotic arm for BU's Mars Rover that transports chemical tubes to a mixing carousel and moves cuvettes into a spectrometer for automated experiments.</p>
+        <div class="project-tech">
+          <span class="tech-chip">SolidWorks</span>
+          <span class="tech-chip">Actuator Design</span>
+          <span class="tech-chip">Robotics</span>
+          <span class="tech-chip">Mechanism Design</span>
+        </div>
+        <span class="card-cta">View Project <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </div>
+
+      <div class="project-card fade-in" onclick="showProject(3)">
+        <span class="project-num">04</span>
+        <div class="project-cover has-img" id="proj-cover-3" onclick="event.stopPropagation()" style="cursor:default;background:#f0f0f0;">
+          <img src="portfolio images/LD Assembly V3 v4 2.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;"/>
+          <div class="project-cover-label" style="display:none"></div>
+        </div>
+        <div class="project-tag">Space Engineering · BU MRC</div>
+        <h3>Life Detection Assembly</h3>
+        <p>Co-led engineering of a full life detection assembly for BU's Mars Rover, including a linear actuation system for contamination-free Martian terrain sample collection.</p>
+        <div class="project-tech">
+          <span class="tech-chip">Linear Actuation</span>
+          <span class="tech-chip">Systems Design</span>
+          <span class="tech-chip">CAD</span>
+        </div>
+        <span class="card-cta">View Project <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </div>
+
+      <div class="project-card fade-in" onclick="showProject(4)">
+        <span class="project-num">05</span>
+        <div class="project-cover" id="proj-cover-4" onclick="event.stopPropagation()">
+          <div class="project-cover-label">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            Upload Cover
+          </div>
+        </div>
+        <div class="project-tag">Surgical Robotics</div>
+        <h3>Soft Robotic Tenaculum</h3>
+        <p>A pneumatic soft robotic tenaculum designed as a safer alternative to rigid intrauterine surgical graspers, achieving compliant, atraumatic grasping forces.</p>
+        <div class="project-tech">
+          <span class="tech-chip">Soft Robotics</span>
+          <span class="tech-chip">Pneumatic Actuation</span>
+          <span class="tech-chip">Surgical Tools</span>
+          <span class="tech-chip">CAD</span>
+        </div>
+        <span class="card-cta">View Project <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </div>
+
+
+      <div class="project-card fade-in" onclick="showProject(5)">
+        <span class="project-num">06</span>
+        <div class="project-cover has-img" id="proj-cover-5" onclick="event.stopPropagation()" style="cursor:default;background:#f0eeeb;">
+          <img src="portfolio images/New Sensing Vessel v32.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;transform:scale(1.15);transform-origin:center;"/>
+          <div class="project-cover-label" style="display:none"></div>
+        </div>
+        <div class="project-tag">Sensing · BU MRC</div>
+        <h3>Sensing Vessel</h3>
+        <p>A sealed vessel designed to house gas and chemical sensors for environmental detection on BU's Mars Rover — engineered for contamination prevention and integration with the Life Detection Assembly.</p>
+        <div class="project-tech">
+          <span class="tech-chip">Fusion 360</span>
+          <span class="tech-chip">Sealing Design</span>
+          <span class="tech-chip">Sensor Integration</span>
+          <span class="tech-chip">Systems Design</span>
+        </div>
+        <span class="card-cta">View Project <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </div>
+
+
+      <div class="project-card fade-in" onclick="showProject(6)">
+        <span class="project-num">07</span>
+        <div class="project-cover has-img" id="proj-cover-6" onclick="event.stopPropagation()" style="cursor:default;background:#dce8f0;">
+          <img src="portfolio images/Box Enclosure_Page_1.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;transform:scale(1.10);transform-origin:center;"/>
+          <div class="project-cover-label" style="display:none"></div>
+        </div>
+        <div class="project-tag">Hardware · EK 131</div>
+        <h3>Temperature Sensing Box Assembly</h3>
+        <p>A fully hand-built temperature-sensing system — enclosure designed in OnShape, parts manufactured by hand, wired electronics, and Arduino-programmed firmware — delivering a working prototype from scratch.</p>
+        <div class="project-tech">
+          <span class="tech-chip">OnShape</span>
+          <span class="tech-chip">Arduino</span>
+          <span class="tech-chip">CAD</span>
+          <span class="tech-chip">Sensor Integration</span>
+        </div>
+        <span class="card-cta">View Project <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- RECOMMENDATIONS -->
+  <section id="recommendations" style="background: var(--off-white); padding-top: 3rem; padding-bottom: 3rem;">
+    <div class="section-header fade-in" style="margin-bottom: 2rem;">
+      <span class="section-number">03 — What I Love</span>
+      <h2 class="section-title">Some Literary Favorites</h2>
+    </div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2.5rem;">
+      <div class="fade-in">
+        <h4 style="font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 1.6rem; color: var(--ink);">Films</h4>
+        <ul class="skills-list">
+          <li><em>La Haine</em> — Mathieu Kassovitz, 1995</li>
+          <li><em>Barry Lyndon</em> — Stanley Kubrick, 1975</li>
+          <li><em>Once Upon a Time in Anatolia</em> — Nuri Bilge Ceylan, 2011</li>
+          <li><em>The Talented Mr. Ripley</em> — Anthony Minghella, 1999</li>
+        </ul>
+      </div>
+      <div class="fade-in">
+        <h4 style="font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 1.6rem; color: var(--ink);">Books</h4>
+        <ul class="skills-list">
+          <li><em>The Count of Monte Cristo</em> — Alexandre Dumas</li>
+          <li><em>Madonna in a Fur Coat</em> — Sabahattin Ali</li>
+          <li><em>Frankenstein</em> — Mary Shelley</li>
+          <li><em>Jane Eyre</em> — Charlotte Brontë</li>
+        </ul>
+      </div>
+      <div class="fade-in">
+        <h4 style="font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 1.6rem; color: var(--ink);">Opera</h4>
+        <ul class="skills-list">
+          <li><em>La Traviata</em> — Verdi</li>
+          <li><em>Faust</em> — Gounod</li>
+          <li><em>Don Giovanni</em> — Mozart</li>
+          <li><em>Carmen</em> — Bizet</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-header fade-in">
+      <span class="section-number">04 — Contact</span>
+      <h2 class="section-title">Get In Touch</h2>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-left fade-in">
+        <h2>Let's build something<br><em>meaningful</em> together.</h2>
+        <p>Whether you're a researcher, a medtech team, or a fellow engineer — I'm always open to discussing new projects, research opportunities, or collaborations in medical device design and robotics.</p>
+      </div>
+      <div class="contact-links fade-in">
+        <a class="contact-item" href="/cdn-cgi/l/email-protection#cbafaeada5aeaabda88ba9bee5aeafbe">
+          <div><div class="contact-item-label">Email</div><div class="contact-item-value"><span class="__cf_email__" data-cfemail="17737271797276617457756239727362">[email&#160;protected]</span></div></div>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a class="contact-item" href="https://linkedin.com/in/defneavcilar" target="_blank">
+          <div><div class="contact-item-label">LinkedIn</div><div class="contact-item-value">linkedin.com/in/defneavcilar</div></div>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a class="contact-item" href="https://github.com/defneavcilarr" target="_blank">
+          <div><div class="contact-item-label">GitHub</div><div class="contact-item-value">github.com/defneavcilarr</div></div>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a class="contact-item" href="tel:+18572212646">
+          <div><div class="contact-item-label">Phone</div><div class="contact-item-value">+1 857 221 2646</div></div>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Defne Avcilar</p>
+    <p>Boston University · Biomedical Engineering · Kilachand Honors College</p>
+  </footer>
+
+</div><!-- end home page -->
+
+
+<!-- ═══════════════════════════════ PROJECT PAGES ═══════════════════════════════ -->
+
+<!-- PROJECT 0: Sharps Box -->
+<div class="page" id="page-proj-0">
+  <div class="proj-page">
+    <div class="proj-hero">
+      <div class="proj-hero-left">
+        <p class="proj-eyebrow">Medical Device · 2022</p>
+        <h1 class="proj-title">Automated Sharps Box</h1>
+        <p class="proj-subtitle">An automated sharps disposal prototype engineered to eliminate the risk of needlestick injuries in clinical settings — designed during an internship at Acıbadem University and presented to hospital leadership.</p>
+      </div>
+      <div class="proj-hero-right">
+        <div class="proj-hero-icon">✚</div>
+      </div>
+    </div>
+    <!-- Full-width hero image -->
+    <div style="position:relative;width:100%;height:400px;overflow:hidden;margin-bottom:2.5rem;border-radius:8px;">
+      <img src="portfolio images/sharps box .png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;"/>
+    </div>
+    <div class="proj-body">
+      <div class="proj-body-grid">
+        <div class="proj-body-main">
+          <p class="proj-section-label">Background &amp; Motivation</p>
+          <p>Needlestick injuries are among the most common occupational hazards for healthcare workers, posing serious risks of bloodborne pathogen transmission. Conventional sharps boxes require manual lid operation, leaving staff vulnerable during disposal. This project aimed to fully automate the process.</p>
+
+          <p class="proj-section-label">Design &amp; Development</p>
+          <p>The prototype was designed in Fusion 360 under the supervision of Dr. Akın, Dean of Engineering at Acıbadem University. The mechanism uses a sensor-triggered lid actuator — when a used needle is detected approaching the opening, the lid opens automatically and closes securely once the sharp is deposited, with no hand contact required.</p>
+          <ul>
+            <li>Modeled full enclosure and lid mechanism in Fusion 360 with focus on ergonomic placement and clinical footprint</li>
+            <li>Selected materials for compatibility with standard medical sterilization protocols</li>
+            <li>Authored a comprehensive technical report covering functionality, injury risk mitigation rationale, and cost analysis</li>
+          </ul>
+
+          <!-- Three images centered full-width -->
+          <div style="display:flex;gap:1.2rem;margin:1.8rem 0;">
+            <div style="position:relative;flex:1;height:300px;overflow:hidden;border-radius:6px;background:#f6f4f0;display:flex;align-items:center;justify-content:center;">
+              <img src="portfolio images/sharps box .png" style="max-width:90%;max-height:90%;object-fit:contain;"/>
+              <span style="position:absolute;bottom:0.8rem;left:1rem;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,0.35);padding:0.2rem 0.6rem;border-radius:2px;">Full Assembly</span>
+            </div>
+            <div style="position:relative;flex:1;height:300px;overflow:hidden;border-radius:6px;background:#f6f4f0;display:flex;align-items:center;justify-content:center;">
+              <img src="portfolio images/sharps box cover bottom.png" style="max-width:90%;max-height:90%;object-fit:contain;"/>
+              <span style="position:absolute;bottom:0.8rem;left:1rem;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,0.35);padding:0.2rem 0.6rem;border-radius:2px;">Cover &amp; Lid</span>
+            </div>
+            <div style="position:relative;flex:1;height:300px;overflow:hidden;border-radius:6px;background:#f6f4f0;display:flex;align-items:center;justify-content:center;">
+              <img src="portfolio images/sharps box rotating piece.png" style="max-width:90%;max-height:90%;object-fit:contain;"/>
+              <span style="position:absolute;bottom:0.8rem;left:1rem;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,0.35);padding:0.2rem 0.6rem;border-radius:2px;">Rotating Mechanism</span>
+            </div>
+          </div>
+
+          <p class="proj-section-label">Outcome</p>
+          <p>The design was formally presented to Acıbadem Hospitals' product acquisition board. Following the presentation, the prototype was placed under official review for potential adoption across the hospital network — a significant outcome for a first engineering internship project.</p>
+        </div>
+        <div class="proj-sidebar">
+          <div class="proj-meta-block">
+            <div class="meta-label">Category</div>
+            <div class="meta-value">Medical Device · Automation</div>
+          </div>
+          <div class="proj-meta-block">
+            <div class="meta-label">Date</div>
+            <div class="meta-value">June – August 2022</div>
+          </div>
+          <div class="proj-meta-block">
+            <div class="meta-label">Context</div>
+            <div class="meta-value">Internship · Acıbadem University, Istanbul</div>
+          </div>
+          <div class="proj-meta-block">
+            <div class="meta-label">Tools &amp; Methods</div>
+            <div class="proj-tech-list">
+              <span class="tech-chip">Fusion 360</span>
+              <span class="tech-chip">Mechanism Design</span>
+              <span class="tech-chip">Healthcare Safety</span>
+              <span class="tech-chip">Technical Writing</span>
+              <span class="tech-chip">Prototyping</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="proj-nav">
+    <button class="proj-nav-btn disabled" id="prev-0">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Previous
+    </button>
+    <div style="display:flex;align-items:center;gap:1.2rem;">
+      <button class="proj-nav-back" onclick="showPage('home'); scrollToSection('projects')">← All Projects</button>
+      <div class="proj-nav-center" id="dots-0"></div>
+    </div>
+    <button class="proj-nav-btn" id="next-0" onclick="showProject(1)">
+      Next
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- PROJECT 1: Hip Implant -->
+<div class="page" id="page-proj-1">
+  <div class="proj-page">
+    <div class="proj-hero">
+      <div class="proj-hero-left">
+        <p class="proj-eyebrow">Orthopedic Implant · 2025</p>
+        <h1 class="proj-title">Custom Orthopedic Hip Implant</h1>
+        <p class="proj-subtitle">A custom-designed hip implant modeled from anatomical principles, validated through FEA stress analysis and iterative geometry optimization to meet real physiological performance benchmarks.</p>
+      </div>
+      <div class="proj-hero-right">
+        <div class="proj-hero-icon">⬡</div>
+      </div>
+    </div>
+    <!-- Full-width hero image -->
+    <div style="position:relative;width:100%;height:400px;overflow:hidden;margin-bottom:2.5rem;border-radius:8px;">
+      <img src="portfolio images/biomedical implant v21 2.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;"/>
+    </div>
+    <div class="proj-body">
+      <div class="proj-body-grid">
+        <div class="proj-body-main">
+          <p class="proj-section-label">Overview</p>
+          <p>Total hip arthroplasty is one of the most common and impactful orthopedic procedures. This project focused on designing a hip implant stem optimized for anatomical compatibility, long-term durability, and reduced stress concentrations — applying core biomechanical engineering principles throughout.</p>
+
+          <p class="proj-section-label">Design Process</p>
+          <p>The implant geometry was developed in Fusion 360, starting from anatomical reference data to ensure functional fit within the femoral canal. Careful attention was paid to the proximal shoulder geometry and neck-shaft angle for natural load transfer.</p>
+          <ul>
+            <li>Applied anatomical and biomechanical principles to establish implant geometry from reference CT-derived profiles</li>
+            <li>Ran FEA-based stress analysis under simulated physiological loading conditions (gait, stair ascent)</li>
+            <li>Validated safety factors against standard orthopedic structural benchmarks</li>
+            <li>Iteratively refined implant geometry through multiple design cycles to reduce peak stress concentrations</li>
+            <li>Evaluated material candidates for biocompatibility and fatigue resistance (Ti-6Al-4V, CoCrMo)</li>
+          </ul>
+
+          <!-- View 1 & 2 side by side, larger -->
+          <div style="display:flex;gap:1.2rem;margin:1.8rem 0;">
+            <div style="position:relative;flex:1;height:420px;overflow:hidden;border-radius:6px;background:#f6f4f0;display:flex;align-items:center;justify-content:center;">
+              <img src="portfolio images/biomedical implant v21 2.png" style="max-width:92%;max-height:92%;object-fit:contain;"/>
+              <span style="position:absolute;bottom:0.8rem;left:1rem;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,0.35);padding:0.2rem 0.6rem;border-radius:2px;">View 1</span>
+            </div>
+            <div style="position:relative;flex:1;height:420px;overflow:hidden;border-radius:6px;background:#f6f4f0;display:flex;align-items:center;justify-content:center;">
+              <img src="portfolio images/biomedical implant v21 3.png" style="max-width:92%;max-height:92%;object-fit:contain;"/>
+              <span style="position:absolute;bottom:0.8rem;left:1rem;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,0.35);padding:0.2rem 0.6rem;border-radius:2px;">View 2</span>
+            </div>
+          </div>
+
+          <p class="proj-section-label">Key Results</p>
+          <p>The final design achieved structural safety factor targets under all simulated load cases. Stress concentration hotspots identified in early iterations were resolved through geometric fillets and cross-section transitions, resulting in a more uniform stress distribution across the implant body.</p>
+        </div>
+        <div class="proj-sidebar">
+          <div class="proj-meta-block">
+            <div class="meta-label">Category</div>
+            <div class="meta-value">Orthopedic Implant Design</div>
+          </div>
+          <div class="proj-meta-block">
+            <div class="meta-label">Date</div>
+            <div class="meta-value">June 2025</div>
+          </div>
+          <div class="proj-meta-block">
+            <div class="meta-label">Tools &amp; Methods</div>
+            <div class="proj-tech-list">
+              <span class="tech-chip">Fusion 360</span>
+              <span class="tech-chip">FEA</span>
+              <span class="tech-chip">Biomechanics</span>
+              <span class="tech-chip">Implant Design</span>
+              <span class="tech-chip">Stress Analysis</span>
+              <span class="tech-chip">Material Selection</span>
+            </div>
+          </div>
+          <!-- View 3 below tags -->
+          <div style="position:relative;width:100%;height:360px;overflow:hidden;border-radius:6px;background:#f6f4f0;display:flex;align-items:center;justify-content:center;margin-top:1.8rem;">
+            <img src="portfolio images/biomedical implant v21.png" style="max-width:92%;max-height:92%;object-fit:contain;"/>
+            <span style="position:absolute;bottom:0.8rem;left:1rem;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,0.35);padding:0.2rem 0.6rem;border-radius:2px;">View 3</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="proj-nav">
+    <button class="proj-nav-btn" id="prev-1" onclick="showProject(0)">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Previous
+    </button>
+    <div style="display:flex;align-items:center;gap:1.2rem;">
+      <button class="proj-nav-back" onclick="showPage('home'); scrollToSection('projects')">← All Projects</button>
+      <div class="proj-nav-center" id="dots-1"></div>
+    </div>
+    <button class="proj-nav-btn" id="next-1" onclick="showProject(2)">
+      Next
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- PROJECT 2: Mini Robotic Arm -->
+<div class="page" id="page-proj-2">
+  <div class="proj-page">
+    <div class="proj-hero">
+      <div class="proj-hero-left">
+        <p class="proj-eyebrow">Robotics · BU Mars Rover Club · 2025–Present</p>
+        <h1 class="proj-title">Mini Robotic Arm</h1>
+        <p class="proj-subtitle">A compact robotic arm designed for BU's Mars Rover life detection assembly, precisely transporting chemical tubes and cuvettes between instruments in a controlled, repeatable linear motion.</p>
+      </div>
+      <div class="proj-hero-right">
+        <div class="proj-hero-icon">⚙</div>
+      </div>
+    </div>
+    <!-- Full-width: assembly overview -->
+    <div>
+      <div class="proj-hero-img proj-img-slot has-img" id="p2-hero" style="cursor:default;background:#f8f8f8;">
+        <img src="portfolio images/Mini Arm v50.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;transform:scale(1.5);transform-origin:center;"/>
+        <div class="proj-img-slot-label" style="display:none"></div>
+      </div>
+    </div>
+    <div class="proj-body">
+      <div class="proj-body-grid">
+        <div class="proj-body-main">
+          <p class="proj-section-label">Context</p>
+          <p>As part of BU's Mars Rover Club life detection team, this robotic arm is a critical subsystem within a larger automated assembly designed to perform chemical experiments on Martian terrain samples. It must operate reliably in a constrained, vibration-prone rover environment with no possibility of in-field correction.</p>
+
+          <!-- CAD Assembly above Design & Engineering -->
+          <div style="position:relative;width:100%;height:400px;overflow:hidden;border-radius:6px;background:#f6f4f0;display:flex;align-items:center;justify-content:center;margin:1.8rem 0;">
+            <img src="portfolio images/Mini Arm v50.png" style="max-width:90%;max-height:90%;object-fit:contain;"/>
+            <span style="position:absolute;bottom:0.8rem;left:1rem;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,0.35);padding:0.2rem 0.6rem;border-radius:2px;">CAD Assembly</span>
+          </div>
+
+          <p class="proj-section-label">Design &amp; Engineering</p>
+          <p>The arm was modeled in SolidWorks with a strong emphasis on precision motion, repeatability, and low mass. Two primary functions were engineered into the design:</p>
+
+          <ul>
+            <li>Transport of chemical reagent tubes from storage to the mixing carousel for sample introduction</li>
+            <li>Controlled placement of cuvettes into the spectrometer in a precise linear motion path, ensuring optical alignment</li>
+            <li>Minimized degrees of freedom to reduce failure points while achieving required task coverage</li>
+            <li>Designed for integration with the broader life detection assembly frame and actuation system</li>
+          </ul>
+
+          <!-- Prototype photos: side by side -->
+          <div style="display:flex;gap:1.2rem;margin:1.8rem 0;">
+            <div style="position:relative;flex:1;height:420px;overflow:hidden;border-radius:6px;background:#f6f4f0;display:flex;align-items:center;justify-content:center;">
+              <img src="portfolio images/mini robotic arm image 1.jpg" style="max-width:92%;max-height:92%;object-fit:contain;"/>
+              <span style="position:absolute;bottom:0.8rem;left:1rem;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,0.35);padding:0.2rem 0.6rem;border-radius:2px;">Prototype</span>
+            </div>
+            <div style="position:relative;flex:1;height:420px;overflow:hidden;border-radius:6px;background:#f6f4f0;display:flex;align-items:center;justify-content:center;">
+              <img src="portfolio images/mini robotic arm image 2.jpeg" style="max-width:92%;max-height:92%;object-fit:contain;"/>
+              <span style="position:absolute;bottom:0.8rem;left:1rem;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,0.35);padding:0.2rem 0.6rem;border-radius:2px;">Build Detail</span>
+            </div>
+          </div>
+
+          <p class="proj-section-label">Engineering Challenges</p>
+          <p>Key challenges included designing for tight spatial constraints within the rover chassis, ensuring cuvette alignment tolerances within the spectrometer's acceptance window, and selecting actuation methods that remain functional under Mars temperature swings.</p>
+        </div>
+        <div class="proj-sidebar">
+          <div class="proj-meta-block">
+            <div class="meta-label">Category</div>
+            <div class="meta-value">Robotics · Space Engineering</div>
+          </div>
+          <div class="proj-meta-block">
+            <div class="meta-label">Context</div>
+            <div class="meta-value">BU Mars Rover Club · Sept 2025–Present</div>
+          </div>
+          <div class="proj-meta-block">
+            <div class="meta-label">Tools &amp; Methods</div>
+            <div class="proj-tech-list">
+              <span class="tech-chip">SolidWorks</span>
+              <span class="tech-chip">Actuator Design</span>
+              <span class="tech-chip">Robotics</span>
+              <span class="tech-chip">Mechanism Design</span>
+              <span class="tech-chip">Systems Integration</span>
+            </div>
+          </div>
+          <!-- Components image below tags -->
+          <div style="position:relative;width:100%;height:320px;overflow:hidden;border-radius:6px;background:#f6f4f0;display:flex;align-items:center;justify-content:center;margin-top:1.8rem;">
+            <img src="portfolio images/mini arm pieces image.png" style="max-width:92%;max-height:92%;object-fit:contain;"/>
+            <span style="position:absolute;bottom:0.8rem;left:1rem;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,0.35);padding:0.2rem 0.6rem;border-radius:2px;">Components</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="proj-nav">
+    <button class="proj-nav-btn" id="prev-2" onclick="showProject(1)">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Previous
+    </button>
+    <div style="display:flex;align-items:center;gap:1.2rem;">
+      <button class="proj-nav-back" onclick="showPage('home'); scrollToSection('projects')">← All Projects</button>
+      <div class="proj-nav-center" id="dots-2"></div>
+    </div>
+    <button class="proj-nav-btn" id="next-2" onclick="showProject(3)">
+      Next
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- PROJECT 3: Life Detection Assembly -->
+<div class="page" id="page-proj-3">
+  <div class="proj-page">
+    <div class="proj-hero">
+      <div class="proj-hero-left">
+        <p class="proj-eyebrow">Life Detection Engineering · BU Mars Rover Club · 2025–Present</p>
+        <h1 class="proj-title">Life Detection Assembly</h1>
+        <p class="proj-subtitle">A full life detection system co-engineered for BU's Mars Rover — performing automated chemical experiments on Martian terrain samples through a sealed, multi-stage collection and analysis pipeline.</p>
+      </div>
+      <div class="proj-hero-right">
+        <div class="proj-hero-icon">◎</div>
+      </div>
+    </div>
+    <!-- Full-width: rover / assembly -->
+    <div>
+      <div class="proj-hero-img proj-img-slot has-img" id="p3-hero" style="cursor:default;">
+        <img src="portfolio images/LD Assembly V3 v4 2.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;"/>
+        <div class="proj-img-slot-label" style="display:none"></div>
+      </div>
+    </div>
+    <div class="proj-body">
+      <div class="proj-body-grid">
+        <div class="proj-body-main">
+          <p class="proj-section-label">Mission Context</p>
+          <p>BU's Mars Rover competes in university rover challenges requiring autonomous life detection from soil samples. The life detection assembly must collect a Martian terrain sample, introduce chemical reagents, perform spectroscopic analysis, and return results — all without human intervention and in a rugged, weight-constrained rover platform.</p>
+
+          <p class="proj-section-label">System Design</p>
+          <p>As co-lead of the life detection team, the assembly was designed as a series of coordinated subsystems:</p>
+
+          <ul>
+            <li>Linear actuation system that drives a sample-collecting auger into the ground and retracts it back into a sealed chamber — preventing cross-contamination</li>
+            <li>Sample transfer pathway from the auger into the chemical mixing carousel</li>
+            <li>Integration interface with the mini robotic arm for reagent tube and cuvette handling</li>
+            <li>Full enclosure design to maintain sample integrity across the collection-to-analysis pipeline</li>
+          </ul>
+
+          <!-- Two images side by side -->
+          <div style="display:flex;gap:1.2rem;margin:1.8rem 0;">
+            <div style="position:relative;flex:1;height:300px;overflow:hidden;border-radius:6px;background:#f6f4f0;display:flex;align-items:center;justify-content:center;">
+              <img src="portfolio images/LD Assembly V3 v4 2.png" style="max-width:90%;max-height:90%;object-fit:contain;"/>
+              <span style="position:absolute;bottom:0.8rem;left:1rem;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,0.35);padding:0.2rem 0.6rem;border-radius:2px;">Assembly View 1</span>
+            </div>
+            <div style="position:relative;flex:1;height:300px;overflow:hidden;border-radius:6px;background:#f6f4f0;display:flex;align-items:center;justify-content:center;">
+              <img src="portfolio images/LD Assembly V3 v4.png" style="max-width:90%;max-height:90%;object-fit:contain;"/>
+              <span style="position:absolute;bottom:0.8rem;left:1rem;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,0.35);padding:0.2rem 0.6rem;border-radius:2px;">Assembly View 2</span>
+            </div>
+          </div>
+
+          <p class="proj-section-label">Engineering Focus</p>
+          <p>The linear actuation mechanism required careful load analysis to ensure the auger could penetrate compacted soil analogs while remaining reversible and reliable over repeated cycles. Sealing strategy and sample path geometry were critical to ensuring no atmospheric contamination of the collected sample before spectroscopic analysis.</p>
+        </div>
+        <div class="proj-sidebar">
+          <div class="proj-meta-block">
+            <div class="meta-label">Category</div>
+            <div class="meta-value">Space Engineering · Systems Design</div>
+          </div>
+          <div class="proj-meta-block">
+            <div class="meta-label">Role</div>
+            <div class="meta-value">Co-lead, Life Detection Team</div>
+          </div>
+          <div class="proj-meta-block">
+            <div class="meta-label">Context</div>
+            <div class="meta-value">BU Mars Rover Club · Sept 2025–Present</div>
+          </div>
+          <div class="proj-meta-block">
+            <div class="meta-label">Tools &amp; Methods</div>
+            <div class="proj-tech-list">
+              <span class="tech-chip">Linear Actuation</span>
+              <span class="tech-chip">Systems Design</span>
+              <span class="tech-chip">CAD</span>
+              <span class="tech-chip">Sealing Design</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="proj-nav">
+    <button class="proj-nav-btn" id="prev-3" onclick="showProject(2)">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Previous
+    </button>
+    <div style="display:flex;align-items:center;gap:1.2rem;">
+      <button class="proj-nav-back" onclick="showPage('home'); scrollToSection('projects')">← All Projects</button>
+      <div class="proj-nav-center" id="dots-3"></div>
+    </div>
+    <button class="proj-nav-btn" id="next-3" onclick="showProject(4)">
+      Next
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- PROJECT 4: Soft Robotic Tenaculum -->
+<div class="page" id="page-proj-4">
+  <div class="proj-page">
+    <div class="proj-hero">
+      <div class="proj-hero-left">
+        <p class="proj-eyebrow">Surgical Robotics · 2025</p>
+        <h1 class="proj-title">Soft Robotic Tenaculum</h1>
+        <p class="proj-subtitle">A pneumatically actuated soft robotic tenaculum engineered to replace rigid intrauterine surgical graspers — delivering compliant, atraumatic tissue contact to reduce the risk of cervical injury during gynecological procedures.</p>
+      </div>
+      <div class="proj-hero-right">
+        <div class="proj-hero-icon">⌁</div>
+      </div>
+    </div>
+    <!-- Full-width: device render or photo -->
+    <div>
+      <div class="proj-hero-img proj-img-slot" id="p4-hero">
+        <div class="proj-img-slot-label"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Add Hero Image</div>
+      </div>
+    </div>
+    <div class="proj-body">
+      <div class="proj-body-grid">
+        <div class="proj-body-main">
+          <p class="proj-section-label">Clinical Problem</p>
+          <p>Conventional tenaculums are rigid, pointed instruments used to grasp and stabilize the cervix during uterine procedures. Their stiff metal construction frequently causes pain, tearing, and bleeding — particularly in outpatient settings without anesthesia. A compliant, force-limited alternative could meaningfully improve patient experience and reduce procedural complications.</p>
+
+          <p class="proj-section-label">Design Approach</p>
+          <p>This project applied soft robotics principles — specifically pneumatic elastomeric actuators — to create a tenaculum that conforms to tissue geometry and self-limits grasping force through material compliance rather than active control.</p>
+
+          <!-- Wide: actuator geometry / inflated state -->
+          <div class="proj-img-wide">
+            <div class="proj-img-slot" id="p4-actuator" style="height:320px;width:100%">
+              <div class="proj-img-slot-label"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Actuator Design / CAD</div>
+            </div>
+          </div>
+
+          <ul>
+            <li>Designed soft actuator geometry using CAD to optimize grasping curvature and contact surface area</li>
+            <li>Selected biocompatible elastomeric materials suitable for clinical sterilization and tissue contact</li>
+            <li>Engineered pneumatic channel routing within the actuator body for controlled, symmetric inflation</li>
+            <li>Analyzed grasping force profiles to confirm forces remain below cervical tissue damage thresholds</li>
+            <li>Designed outer form factor for compatibility with existing gynecological instrument access paths</li>
+          </ul>
+
+          <p class="proj-section-label">Significance</p>
+          <p>Soft robotic approaches to surgical grasping represent a growing frontier in minimally invasive tools. This project demonstrates how compliant mechanisms can address real patient safety gaps where rigid instrument design falls short.</p>
+
+          <!-- Side-by-side: uninflated vs inflated, or force analysis -->
+          <div class="proj-img-pair">
+            <div class="proj-img-slot" id="p4-state1" style="height:260px">
+              <div class="proj-img-slot-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Uninflated</div>
+            </div>
+            <div class="proj-img-slot" id="p4-state2" style="height:260px">
+              <div class="proj-img-slot-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Inflated / Grasping</div>
+            </div>
+          </div>
+        </div>
+        </div>
+        <div class="proj-sidebar">
+          <div class="proj-meta-block">
+            <div class="meta-label">Category</div>
+            <div class="meta-value">Surgical Robotics · Soft Robotics</div>
+          </div>
+          <div class="proj-meta-block">
+            <div class="meta-label">Date</div>
+            <div class="meta-value">2025</div>
+          </div>
+          <div class="proj-meta-block">
+            <div class="meta-label">Tools &amp; Methods</div>
+            <div class="proj-tech-list">
+              <span class="tech-chip">Soft Robotics</span>
+              <span class="tech-chip">Pneumatic Actuation</span>
+              <span class="tech-chip">Surgical Tools</span>
+              <span class="tech-chip">Biocompatible Materials</span>
+              <span class="tech-chip">CAD</span>
+              <span class="tech-chip">Force Analysis</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="proj-nav">
+    <button class="proj-nav-btn" id="prev-4" onclick="showProject(3)">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Previous
+    </button>
+    <div style="display:flex;align-items:center;gap:1.2rem;">
+      <button class="proj-nav-back" onclick="showPage('home'); scrollToSection('projects')">← All Projects</button>
+      <div class="proj-nav-center" id="dots-4"></div>
+    </div>
+    <button class="proj-nav-btn" id="next-4" onclick="showProject(5)">
+      Next
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+
+<!-- PROJECT 5: Sensing Vessel -->
+<div class="page" id="page-proj-5">
+  <div class="proj-page">
+    <div class="proj-hero">
+      <div class="proj-hero-left">
+        <p class="proj-eyebrow">Sensing · BU Mars Rover Club · 2025</p>
+        <h1 class="proj-title">Sensing Vessel</h1>
+        <p class="proj-subtitle">A precision-sealed vessel engineered to house gas and chemical sensors for real-time environmental detection on BU's Mars Rover — designed around contamination prevention and seamless integration with the Life Detection Assembly.</p>
+      </div>
+      <div class="proj-hero-right">
+        <div class="proj-hero-icon">◈</div>
+      </div>
+    </div>
+    <!-- Full-width hero image -->
+    <div>
+      <div class="proj-hero-img proj-img-slot has-img" id="p5-hero" style="cursor:default;background:#f0eeeb;">
+        <img src="portfolio images/New Sensing Vessel v32.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;transform:scale(1.15);transform-origin:center;"/>
+        <div class="proj-img-slot-label" style="display:none"></div>
+      </div>
+    </div>
+    <div class="proj-body">
+      <div class="proj-body-grid">
+        <div class="proj-body-main">
+          <p class="proj-section-label">Design Context</p>
+          <p>Detecting life on Mars requires more than collecting a sample — the surrounding environment must be characterized to distinguish biological signals from background noise. The Sensing Vessel provides a controlled, sealed enclosure for gas and chemical sensors to monitor ambient and sample-adjacent conditions as part of BU's rover life detection pipeline.</p>
+
+          <p class="proj-section-label">Engineering Approach</p>
+          <p>The vessel was modeled in Fusion 360 with sealing as the primary constraint. Any atmospheric contamination between the sensor cavity and the Martian environment would corrupt readings, making airtight construction and controlled sensor exposure critical design requirements.</p>
+
+          <!-- Wide: exploded view -->
+          <div class="proj-img-wide">
+            <div class="proj-img-slot has-img" id="p5-model" style="height:380px;width:100%;background:#f0eeeb;">
+              <div class="proj-img-slot-label" style="display:none"></div>
+            </div>
+          </div>
+
+          <ul>
+            <li>Designed sealed enclosure geometry in Fusion 360 to isolate sensor cavity from external contamination</li>
+            <li>Engineered sensor mounting features for repeatable positioning and reliable electrical interface</li>
+            <li>Selected materials and tolerances compatible with Mars temperature cycling and sterilization requirements</li>
+            <li>Designed integration interfaces for mounting directly onto the Life Detection Assembly frame</li>
+            <li>Optimized enclosure form factor for rover weight and spatial constraints</li>
+          </ul>
+
+          <p class="proj-section-label">Integration</p>
+          <p>The Sensing Vessel connects directly to the Life Detection Assembly, providing environmental sensor data alongside the chemical analysis pipeline. The vessel's sealing strategy mirrors the contamination-control principles used across the broader assembly — ensuring measurement integrity from sample collection through spectroscopic readout.</p>
+
+          <!-- Side-by-side: closed view + upload slot -->
+          <div class="proj-img-pair">
+            <div class="proj-img-slot has-img" id="p5-seal" style="height:300px;background:#f0eeeb;">
+              <div class="proj-img-slot-label" style="display:none"></div>
+            </div>
+            <div class="proj-img-slot" id="p5-integration" style="height:300px">
+              <div class="proj-img-slot-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Assembly Integration</div>
+            </div>
+          </div>
+        </div>
+        <div class="proj-sidebar">
+          <div class="proj-meta-block">
+            <div class="meta-label">Category</div>
+            <div class="meta-value">Sensing · Space Engineering</div>
+          </div>
+          <div class="proj-meta-block">
+            <div class="meta-label">Date</div>
+            <div class="meta-value">2025</div>
+          </div>
+          <div class="proj-meta-block">
+            <div class="meta-label">Context</div>
+            <div class="meta-value">BU Mars Rover Club · Life Detection Team</div>
+          </div>
+          <div class="proj-meta-block">
+            <div class="meta-label">Tools &amp; Methods</div>
+            <div class="proj-tech-list">
+              <span class="tech-chip">Fusion 360</span>
+              <span class="tech-chip">Sealing Design</span>
+              <span class="tech-chip">Sensor Integration</span>
+              <span class="tech-chip">Systems Design</span>
+              <span class="tech-chip">Material Selection</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="proj-nav">
+    <button class="proj-nav-btn" id="prev-5" onclick="showProject(4)">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Previous
+    </button>
+    <div style="display:flex;align-items:center;gap:1.2rem;">
+      <button class="proj-nav-back" onclick="showPage('home'); scrollToSection('projects')">← All Projects</button>
+      <div class="proj-nav-center" id="dots-5"></div>
+    </div>
+    <button class="proj-nav-btn" id="next-5" onclick="showProject(6)">
+      Next
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- PROJECT 6: Temperature Sensing Box Assembly -->
+<div class="page" id="page-proj-6">
+  <div class="proj-page">
+    <div class="proj-hero">
+      <div class="proj-hero-left">
+        <p class="proj-eyebrow">Hardware Design · EK 131 · 2025–2026</p>
+        <h1 class="proj-title">Temperature Sensing Box Assembly</h1>
+        <p class="proj-subtitle">A fully integrated temperature-sensing system built from the ground up — enclosure designed in OnShape, components manufactured by hand, and programmed with Arduino to read and output real-time temperature data.</p>
+      </div>
+      <div class="proj-hero-right">
+        <div class="proj-hero-icon">◻</div>
+      </div>
+    </div>
+    <!-- Full-width hero image -->
+    <div>
+      <div class="proj-hero-img proj-img-slot has-img" id="p6-hero" style="cursor:default;background:#dce8f0;">
+        <img src="portfolio images/Box Enclosure_Page_1.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;transform:scale(1.10);transform-origin:center;"/>
+        <div class="proj-img-slot-label" style="display:none"></div>
+      </div>
+    </div>
+    <div class="proj-body">
+      <div class="proj-body-grid">
+        <div class="proj-body-main">
+          <p class="proj-section-label">Project Overview</p>
+          <p>As part of BU's EK 131: Introduction to Engineering, this project covered the full engineering design-to-build loop. The Temperature Sensing Box Assembly required designing a custom enclosure in CAD, manufacturing all physical components by hand, wiring electronics, and writing working Arduino code — integrating mechanical, electrical, and software disciplines into one functional system.</p>
+
+          <p class="proj-section-label">Design, Manufacturing & Electronics</p>
+          <p>The enclosure was designed in OnShape with geometry optimized for component fit, cable routing, and ease of assembly. Parts were then manufactured by hand — cut, shaped, and assembled into the physical box. The electronic circuit was wired to connect the temperature sensor to the Arduino, and the firmware was written to read sensor data and output it in real time.</p>
+
+          <!-- Wide: CAD model / enclosure design -->
+          <div class="proj-img-wide">
+            <div class="proj-img-slot has-img" id="p6-cad" style="height:320px;width:100%;cursor:default;background:#dce8f0;">
+              <div class="proj-img-slot-label" style="display:none"></div>
+            </div>
+          </div>
+
+          <ul>
+            <li>Designed the full enclosure in OnShape, modeling component mounting, cable routing, and assembly tolerances</li>
+            <li>Manufactured all physical parts by hand — cutting, shaping, and assembling the box from raw materials</li>
+            <li>Wired the temperature sensor and supporting electronics to the Arduino board</li>
+            <li>Wrote Arduino firmware to read sensor values, process temperature data, and output results in real time</li>
+            <li>Documented the full design-to-build process in a technical report covering methodology, fabrication decisions, and measured performance</li>
+          </ul>
+
+          <p class="proj-section-label">Outcome</p>
+          <p>The project delivered a fully functioning, hand-built temperature-sensing system — from CAD model to manufactured enclosure to working electronics. Presented in class alongside a complete technical report, it demonstrated end-to-end ownership of the engineering process: designing, building, programming, and documenting a real working device.</p>
+
+          <!-- Side-by-side: assembled prototype + data output / report -->
+          <div class="proj-img-pair">
+            <div class="proj-img-slot has-img" id="p6-proto" style="height:260px;cursor:default;background:#dce8f0;">
+              <div class="proj-img-slot-label" style="display:none"></div>
+            </div>
+            <div class="proj-img-slot" id="p6-output" style="height:260px">
+              <div class="proj-img-slot-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Data Output / Report</div>
+            </div>
+          </div>
+        </div>
+        <div class="proj-sidebar">
+          <div class="proj-meta-block">
+            <div class="meta-label">Category</div>
+            <div class="meta-value">Hardware Design · Embedded Systems</div>
+          </div>
+          <div class="proj-meta-block">
+            <div class="meta-label">Course</div>
+            <div class="meta-value">EK 131 — Introduction to Engineering · Boston University</div>
+          </div>
+          <div class="proj-meta-block">
+            <div class="meta-label">Date</div>
+            <div class="meta-value">2025–2026</div>
+          </div>
+          <div class="proj-meta-block">
+            <div class="meta-label">Tools &amp; Methods</div>
+            <div class="proj-tech-list">
+              <span class="tech-chip">OnShape</span>
+              <span class="tech-chip">Arduino</span>
+              <span class="tech-chip">CAD</span>
+              <span class="tech-chip">Manufacturing</span>
+              <span class="tech-chip">Electronics Wiring</span>
+              <span class="tech-chip">Sensor Integration</span>
+              <span class="tech-chip">Prototyping</span>
+              <span class="tech-chip">Technical Writing</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="proj-nav">
+    <button class="proj-nav-btn" id="prev-6" onclick="showProject(5)">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Previous
+    </button>
+    <div style="display:flex;align-items:center;gap:1.2rem;">
+      <button class="proj-nav-back" onclick="showPage('home'); scrollToSection('projects')">← All Projects</button>
+      <div class="proj-nav-center" id="dots-6"></div>
+    </div>
+    <button class="proj-nav-btn disabled" id="next-6">
+      Next
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  const TOTAL = 7;
+
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active', 'page-transition'));
+    const el = document.getElementById('page-' + name);
+    el.classList.add('active');
+    setTimeout(() => el.classList.add('page-transition'), 10);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    initFadeIns();
+  }
+
+  function showProject(idx) {
+    showPage('proj-' + idx);
+    renderDots(idx);
+  }
+
+  function renderDots(activeIdx) {
+    for (let i = 0; i < TOTAL; i++) {
+      const container = document.getElementById('dots-' + i);
+      if (!container) continue;
+      container.innerHTML = '';
+      for (let j = 0; j < TOTAL; j++) {
+        const dot = document.createElement('button');
+        dot.className = 'proj-dot' + (j === activeIdx ? ' active' : '');
+        dot.setAttribute('aria-label', 'Project ' + (j + 1));
+        dot.onclick = () => showProject(j);
+        container.appendChild(dot);
+      }
+    }
+  }
+
+  function scrollToSection(id) {
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }, 50);
+  }
+
+  function initFadeIns() {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 80);
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+  }
+
+
+  // Init
+  showPage('home');
+  renderDots(0);
+  initFadeIns();
+</script>
+</body>
+</html>
